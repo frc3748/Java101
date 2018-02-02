@@ -24,21 +24,21 @@ final GpioController gpio = GpioFactory.getInstance();
         GpioPinDigitalOutput trigger = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04);
          GpioPinDigitalInput echo = gpio.provisionDigitalInputPin(RaspiPin.GPIO_05);
         boolean echoState = echo.isHigh();
-        long triggerTime = 0;
-        long echoTime = 0;
-        long  distanceMeters = 0;
-        long roundTrip =  0;
+        long startTime = 0;
+        long endTime = 0;
+        float distanceMeters = 0;
         while(true){
-                triggerTime = System.nanoTime();
                 trigger.high();
                 trigger.low();
                 while(echo.isLow()){ //Wait until the ECHO pin gets HIGH
-        
-      }
-                echoTime = System.nanoTime();
-                roundTrip = triggerTime -  echoTime;
-		distanceMeters = 343 * (roundTrip / 1000);
-		System.out.println("Distance: " + distanceMeters);
+        		startTime = System.nanoTime();
+     		 }
+		while(echo.isHigh()){ //Wait until the ECHO pin gets HIGH
+        		endTime = System.nanoTime();
+     		 }
+		distanceMeters =(((endTime - startTime) / 2) / 1000000000) * 350;
+//		System.out.println("Distance: " + distanceMeters);
+		System.out.println(endTime - startTime);
                 Thread.sleep(100);
         }
 }
